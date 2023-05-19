@@ -1,20 +1,26 @@
 package com.mat.zip.board;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +32,9 @@ public class PostController {
 	@Autowired
 	PostDAO dao;
 	
+	@Autowired
+	PostComDAO dao2;
+	
 	// 자유게시판 게시물 등록 insert
 	@RequestMapping("/board/createPost")
 	public void insert(
@@ -35,7 +44,7 @@ public class PostController {
 			Model model) throws Exception {
 		String savedName = file.getOriginalFilename();
 		String uploadPath
-			= request.getSession().getServletContext().getRealPath("board/resources/img");
+			= request.getSession().getServletContext().getRealPath("resources/img");
 		File target = new File(uploadPath + "/" + savedName);
 		file.transferTo(target);
 		
@@ -70,7 +79,11 @@ public class PostController {
 	public void onePostId(int post_id, Model model) {
 		System.out.println("onePostId요청됨.");
 		PostVO vo = dao.onePostId(post_id);
+		
+		List<PostComVO> list = dao2.postComList(post_id);
+		
 		model.addAttribute("vo", vo);
+		model.addAttribute("list", list);
 	}
 	
 	// 조회수 증가

@@ -10,7 +10,7 @@
 	<h3>자유게시판 - 게시물등록 화면입니다.</h3>
 	<hr color="red">
 	<form action="createPost" id="form" method="post" enctype="multipart/form-data" >
-		회원 ID : <input name="user_id" value="${user_id}"><br>
+		회원 ID : <input name="user_id" value="${user_id}" readonly/><br>
 		제목 : <input name="post_title" value=""><br>
 		게시물의 음식 카테고리 : <select name="food_cg">
 			<option value="한식">한식</option>
